@@ -3,7 +3,11 @@ import CourseModel from '../model/courseModel'
 import CourseService from '../services/courseServices'
 
 class CourseController {
-  public async index (req: Request, res: Response): Promise<Response | undefined> {
+  public async list (req: Request, res: Response): Promise<Response | undefined> {
+    return res.json({ message: '' })
+  }
+
+  public async store (req: Request, res: Response): Promise<Response | undefined> {
     try {
       const { body } = req
 
@@ -19,12 +23,6 @@ class CourseController {
     } catch (err) {
       res.status(400).json({ message: err.message })
     }
-  }
-
-  public async store (req: Request, res: Response): Promise<Response> {
-    const users = await setTimeout(() => ({ message: 'test' }), 2000)
-
-    return res.json(users)
   }
 }
 

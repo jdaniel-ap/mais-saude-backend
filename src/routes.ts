@@ -7,6 +7,6 @@ routes.get('/checkhealth', (_req, res) => {
   res.json({ message: 'online' })
 })
 
-routes.post('/course', CourseController.index)
+routes.post('/course', CourseController.store)
 
 export default routes
