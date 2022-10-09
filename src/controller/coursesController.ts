@@ -1,9 +1,10 @@
 import { Request, Response } from 'express'
 import CourseModel from '../model/courseModel'
 import CourseService from '../services/courseServices'
+import { httpStatus } from '../utils/httpstatus'
 
 class CourseController {
-  public async list (req: Request, res: Response): Promise<Response | undefined> {
+  public async list (_req: Request, res: Response): Promise<Response | undefined> {
     return res.json({ message: '' })
   }
 
@@ -11,17 +12,13 @@ class CourseController {
     try {
       const { body } = req
 
-      const checkAvailaibity = await CourseService.checkCourse(body)
-
-      if (checkAvailaibity) {
-        return res.status(400).json({ message: 'A course with this name already exist' })
-      }
+      await CourseService.checkCourse(body)
 
       const insertCourse = await CourseModel.store(body)
 
-      return res.status(201).json({ ...insertCourse })
+      return res.status(httpStatus.CREATED).json({ ...insertCourse })
     } catch (err) {
-      res.status(400).json({ message: err.message })
+      res.status(httpStatus.BAD_REQUEST).json({ message: err.message })
     }
   }
 }

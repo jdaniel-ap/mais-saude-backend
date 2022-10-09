@@ -11,8 +11,8 @@ class CourseService {
   private async checkValues (course : Course) : Promise<void> {
     const courseParameters = ['name', 'description', 'duration']
     const courseValues = Object.entries(course)
-    const missingValues : string[] = []
     const invalidParameters : string[] = []
+    const missingValues : string[] = []
 
     for (const [key, value] of courseValues) {
       if (key === 'duration' && !value) invalidParameters.push(key)
@@ -26,19 +26,18 @@ class CourseService {
         missingValues.push(key)
       }
     }
-
     if (missingValues.length) throw new Error(`missing the following values: ${missingValues.join(', ')}`)
   }
 
-  public async checkCourse (payload : Course) : Promise<Course | null> {
+  public async checkCourse (payload : Course) : Promise<void> {
     await this.checkValues(payload)
 
     const result = await this.prisma.courses.findFirst(
       { where: {
-        name: payload.name
+        name: payload.name.toLowerCase()
       } })
 
-    return result
+    if (result) throw new Error('A course with this name already exist')
   }
 }
 
