@@ -1,11 +1,29 @@
 import { PrismaClient } from '@prisma/client'
 import { Course } from '../interface/course'
+import { Queries } from '../interface/queries'
 
 class CourseModel {
   private prisma : PrismaClient;
 
   public constructor () {
     this.prisma = new PrismaClient()
+  }
+
+  private queryCleaner (queries : Queries) : Queries {
+    const availableQueries = ['id', 'name', 'duration']
+    let queriesContainer = queries
+
+    for (const key of Object.keys(queriesContainer)) {
+      if (!availableQueries.includes(key)) {
+        delete queriesContainer[key]
+      } else {
+        queriesContainer[key] = {
+          [Number(queries[key]) ? 'equals' : 'contains']: Number(queries[key]) || queries[key]
+        }
+      }
+    }
+    console.log(queriesContainer)
+    return queriesContainer
   }
 
   private formatData (data: Course) : Course {
@@ -27,6 +45,16 @@ class CourseModel {
     })
 
     return request
+  }
+
+  public async list (data : Queries) : Promise<Course[]> {
+    const cleaner = this.queryCleaner(data)
+
+    return this.prisma.courses.findMany({
+      where: {
+        ...cleaner
+      }
+    })
   }
 }
 

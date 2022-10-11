@@ -43,6 +43,10 @@ class CourseService {
     await this.checkValues(payload)
     await this.checkAvailability(payload.name)
   }
+
+  // public async checkParameters (payload : object) : Promise<Course[]> {
+
+  // }
 }
 
 export default new CourseService()

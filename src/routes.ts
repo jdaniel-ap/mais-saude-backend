@@ -8,5 +8,6 @@ routes.get('/checkhealth', (_req, res) => {
 })
 
 routes.post('/course', CourseController.store)
+routes.get('/courses', CourseController.list)
 
 export default routes

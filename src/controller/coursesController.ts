@@ -4,8 +4,10 @@ import CourseService from '../services/courseServices'
 import { httpStatus } from '../utils/httpstatus'
 
 class CourseController {
-  public async list (_req: Request, res: Response): Promise<Response | undefined> {
-    return res.json({ message: '' })
+  public async list (req: Request, res: Response): Promise<Response | undefined> {
+    const { query } = req
+    const list = await CourseModel.list(query)
+    return res.json({ data: list })
   }
 
   public async store (req: Request, res: Response): Promise<Response | undefined> {
