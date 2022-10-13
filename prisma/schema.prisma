@@ -11,29 +11,79 @@ datasource db {
 }
 
 model Courses {
-  id          String    @id @default(uuid())
-  name        String    @unique
+  id          String   @id @default(uuid())
+  name        String   @unique
   description String?
   duration    Int
-  createdAt  DateTime  @default(now())
+  createdAt   DateTime @default(now())
 
   @@map("courses")
 }
 
 model Modules {
-  id          String @id @default(uuid())
-  name        String @unique
+  id          String   @id @default(uuid())
+  name        String   @unique
   description String?
-  createdAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
 
   @@map("modules")
 }
 
 model Students {
-  id          String @id @default(uuid())
-  name        String
-  age         Int
-  
+  id   String @id @default(uuid())
+  name String
+  age  Int
+
   @@map("students")
 }
 
+model Users {
+  id               String       @id @default(uuid())
+  role             Role         @default(PATIENT)
+  conditions       Boolean      @default(true)
+  fullname         String
+  gender           Gender
+  birth            DateTime
+  photoURL         String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  informations     Informations @relation(fields: [fkIdinformations], references: [id])
+  fkIdinformations String       @unique
+  address          Address      @relation(fields: [fkIdAddress], references: [id])
+  fkIdAddress      String       @unique
+
+  @@map("users")
+}
+
+model Informations {
+  id    String @id @default(uuid())
+  cpf   Int    @unique
+  phone Int    @unique
+  email String @unique
+  user  Users?
+
+  @@map("informations")
+}
+
+model Address {
+  id         String  @id @default(uuid())
+  address    String
+  cep        String
+  city       String
+  complement String?
+  state      String
+  user       Users?
+
+  @@map("address")
+}
+
+enum Role {
+  PATIENT
+  PROFESSIONAL
+}
+
+enum Gender {
+  MASCULINE
+  FEMENINE
+  OTHERS
+}

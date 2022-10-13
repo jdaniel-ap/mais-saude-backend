@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { Course } from '../interface/course'
+import { Course, CourseId } from '../interface/course'
 
 class CourseService {
   private prisma: PrismaClient
@@ -30,23 +30,26 @@ class CourseService {
     if (missingValues.length) throw new Error(`missing the following values: ${missingValues.join(', ')}`)
   }
 
-  private async checkAvailability (name : string) : Promise<void> {
-    const result = await this.prisma.courses.findFirst(
-      { where: {
-        name: name.toLowerCase()
-      } })
+  private async checkAvailability (data : CourseId) : Promise<Course | null> {
+    const payload = data.id ? { id: data.id } : { name: data.name.toLocaleLowerCase() }
+    console.log(data)
+    const result = await this.prisma.courses.findUnique(
+      {
+        where: {
+          ...payload
+        }
+      })
 
-    if (result) throw new Error('A course with this name already exist')
+    return result
   }
 
-  public async checkCourse (payload : Course) : Promise<void> {
-    await this.checkValues(payload)
-    await this.checkAvailability(payload.name)
+  public async checkCourse (payload : CourseId, checkValues : boolean) : Promise<void> {
+    checkValues && await this.checkValues(payload)
+    const availability = await this.checkAvailability(payload)
+    if (checkValues && availability) throw new Error('A course with this name already exist')
+
+    if (!availability) throw new Error('This user doesn\'nt exist')
   }
-
-  // public async checkParameters (payload : object) : Promise<Course[]> {
-
-  // }
 }
 
 export default new CourseService()

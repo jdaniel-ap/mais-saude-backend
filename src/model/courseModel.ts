@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { Course } from '../interface/course'
+import { Course, CourseId } from '../interface/course'
 import { Queries } from '../interface/queries'
 
 class CourseModel {
@@ -55,6 +55,17 @@ class CourseModel {
         ...cleaner
       }
     })
+  }
+
+  public async update (data : CourseId) : Promise <Course> {
+    const request = await this.prisma.courses.update({
+      where: {
+        id: data.id
+      },
+      data
+    })
+
+    return request
   }
 }
 
