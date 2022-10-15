@@ -51,14 +51,16 @@ model Users {
   fkIdinformations String       @unique
   address          Address      @relation(fields: [fkIdAddress], references: [id])
   fkIdAddress      String       @unique
+  auth             Auth         @relation(fields: [fkIdAuth], references: [id])
+  fkIdAuth         String       @unique
 
   @@map("users")
 }
 
 model Informations {
   id    String @id @default(uuid())
-  cpf   Int    @unique
-  phone Int    @unique
+  cpf   String @unique
+  phone String @unique
   email String @unique
   user  Users?
 
@@ -75,6 +77,12 @@ model Address {
   user       Users?
 
   @@map("address")
+}
+
+model Auth {
+  id       String @id @default(uuid())
+  password String
+  user     Users?
 }
 
 enum Role {

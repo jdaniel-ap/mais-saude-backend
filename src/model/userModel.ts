@@ -8,7 +8,7 @@ class UserModel {
     this.prisma = new PrismaClient()
   }
 
-  public async store (data : UserInformations) : Promise<User> {
+  public async store (data : UserInformations) : Promise<User | object> {
     const { informations, address, ...rest } = data
     const createReq = await this.prisma.users.create({
       data: { ...rest,
@@ -22,8 +22,17 @@ class UserModel {
             ...address
           }
         }
+      },
+      select: {
+        id: true,
+        birth: true,
+        fullname: true,
+        gender: true,
+        photoURL: true,
+        role: true
       }
-    })
+    }
+    )
 
     return createReq
   }

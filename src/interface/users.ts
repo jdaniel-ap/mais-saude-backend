@@ -7,10 +7,16 @@ export interface User {
   conditions: boolean
 }
 
+export interface UserResponse {
+  status: string,
+  message: string,
+  data: object,
+}
+
 interface Informations {
-  cpf: number
+  cpf: string
   email: string
-  phone: number
+  phone: string
 }
 
 interface Address {
