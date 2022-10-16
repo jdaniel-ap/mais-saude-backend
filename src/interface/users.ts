@@ -3,7 +3,7 @@ export interface User {
   fullname: string
   gender: genders
   birth: Date
-  photoURL: string | null
+  photoURL?: string | null
   conditions: boolean
 }
 
@@ -27,9 +27,19 @@ interface Address {
   state: string
 }
 
+interface Auth {
+  password: string
+}
+
 export interface UserInformations extends User {
   informations: Informations
   address: Address
+  auth: Auth
+}
+
+export interface ValidationResponse {
+  success: boolean
+  data: object
 }
 
 type roles = 'PATIENT' | 'PROFESSIONAL'
